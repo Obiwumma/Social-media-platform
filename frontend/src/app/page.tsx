@@ -1,4 +1,5 @@
 import CreatePost from "./components/CreatePost";
+import CommentSection  from "./components/CommentSection";
 
 interface User {
   id: number;
@@ -54,6 +55,8 @@ export default async function Home() {
           {posts.map((post) => (
             <div key={post.id} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
               <p className="text-gray-900">{post.content}</p>
+
+              <CommentSection postId={post.id} />
             </div>
           ))}
           

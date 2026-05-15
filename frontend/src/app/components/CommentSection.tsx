@@ -28,7 +28,7 @@ export default function CommentSection({ postId }: { postId: string }) {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({content: content, userId: testUserId, postId})
+        body: JSON.stringify({content: content, userId: testUserId, postId: postId})
       })
 
       // (Remember your error handling and router.refresh() here!)
