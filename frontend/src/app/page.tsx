@@ -52,8 +52,8 @@ export default async function Home() {
           {/* For each post, create a <div> that displays the post.content */}
           {/* Give it a nice white background, some padding, and a border to match the CreatePost box */}
           {posts.map((post) => (
-            <div key={post.id}>
-              <p>{post.content}</p>
+            <div key={post.id} className="bg-white p-4 rounded-xl border border-gray-200 shadow-sm">
+              <p className="text-gray-900">{post.content}</p>
             </div>
           ))}
           
