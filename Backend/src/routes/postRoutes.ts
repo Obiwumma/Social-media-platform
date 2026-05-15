@@ -11,15 +11,15 @@ router.post("/", async (req, res) => {
     // Remember: A post needs text content AND the ID of the user who wrote it!
     const { content, userId } = req.body;
 
-    // 2. YOUR TURN: Write the Drizzle query to insert the post into the database.
-    // Make sure to use .returning() so we can send the new post back!
-    const newPost = await db.insert(posts).values({
+    const result = await db.insert(posts).values({
       content,
       userId
-    }).returning
+    }).returning()
 
     // 3. Respond to the frontend
-    // res.status(201).json(newPost);
+    const newPost = result[0];
+    
+    res.status(201).json(newPost);
 
   } catch (error) {
     console.error(error);
