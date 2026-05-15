@@ -13,13 +13,9 @@ export default function Navbar() {
         {/* YOUR CHALLENGE: Navigation Links */}
         <div className="flex gap-6 font-medium text-gray-600">
           {/* Write a Next.js <Link> here that points to "/" and says "Home" */}
-          <Link href="/" className="text-xl font-bold text-blue-600 tracking-tight">
-          Home
-        </Link>
+          <Link href="/" className="hover:text-blue-600 transition-colors"> Home </Link>
           {/* Write a Next.js <Link> here that points to "/profile" and says "Profile" */}
-          <Link href="/profile" className="text-xl font-bold text-blue-600 tracking-tight">
-          Profile
-        </Link>
+          <Link href="/profile" className="hover:text-blue-600 transition-colors">Profile</Link>
         </div>
 
       </div>
