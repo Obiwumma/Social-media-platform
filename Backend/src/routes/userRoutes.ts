@@ -26,3 +26,18 @@ router.post("/", async (req, res) => {
   }
 })
 
+// Get all users
+router.get("/", async (req, res) => {
+  try {
+    // YOUR TURN: Write the Drizzle query to fetch all users
+    const allUsers = await db.select().from(users)
+    
+    // Send them back to the frontend
+    res.status(200).json(allUsers);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch users" });
+  }
+});
+
+export default router
