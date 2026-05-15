@@ -1,7 +1,16 @@
+import CreatePost from "./components/CreatePost";
+
 interface User {
   id: number;
   username: string;
   email: string;
+  createdAt: string;
+}
+
+interface Post{
+  id: string;
+  content: string;
+  userId: string;
   createdAt: string;
 }
 
@@ -12,6 +21,10 @@ export default async function Home() {
   
   // 2. Convert the response to JSON
   const users: User[] = await res.json();
+
+  // Fetch the posts
+  const postRes = await fetch('http://127.0.0.1:3000/api/posts', { cache: 'no-store' });
+  const posts: Post[] = await postRes.json();
 
   return (
     <main className="p-8 max-w-5xl mx-auto">
@@ -26,6 +39,25 @@ export default async function Home() {
             <p className="text-sm text-gray-500">{user.email}</p>
           </div>
         ))}
+      </div>
+
+      <CreatePost />
+
+      {/* The Feed Section */}
+      <div className="mt-8">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Global Feed</h2>
+        <div className="flex flex-col gap-4">
+          
+          {/* YOUR CHALLENGE: Map over the 'posts' array here! */}
+          {/* For each post, create a <div> that displays the post.content */}
+          {/* Give it a nice white background, some padding, and a border to match the CreatePost box */}
+          {posts.map((post) => (
+            <div key={post.id}>
+              <p>{post.content}</p>
+            </div>
+          ))}
+          
+        </div>
       </div>
     </main>
   );
