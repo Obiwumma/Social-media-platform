@@ -39,9 +39,9 @@ export const followers = pgTable(
       .references(() => users.id, { onDelete: "cascade" }),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => {
-    return {
-      pk: primaryKey({ columns: [table.followerId, table.followingId] }),
-    };
-  }
+  (table) => ({
+    // This is the magic! A Composite Primary Key.
+    // It guarantees that User A can only follow User B ONE time.
+    pk: primaryKey({ columns: [table.followerId, table.followingId] }),
+  })
 );
