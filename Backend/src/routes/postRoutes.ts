@@ -2,15 +2,25 @@ import { Router } from "express";
 import { db } from "../db/index.js";
 import { posts } from "../db/schema.js";
 import { desc } from "drizzle-orm";
+import { checkAuth, type AuthRequest } from "../middleware/authMiddleware.js";
+// import { Request } from "express";
 
 const router = Router();
+export interface AuthRequest extends Request {
+  userId?: string;
+}
 
 // Endpoint to create a new post
-router.post("/", async (req, res) => {
+router.post("/", checkAuth, async (req: AuthRequest, res) => {
   try {
     // 1. Extract the data from the frontend
     // Remember: A post needs text content AND the ID of the user who wrote it!
-    const { content, userId } = req.body;
+    const { content } = req.body;
+    const userId = req.userId
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized. Please log in." });
+    }
 
     const result = await db.insert(posts).values({
       content,
