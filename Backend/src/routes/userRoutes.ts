@@ -4,6 +4,10 @@ import { users } from "../db/schema.js";
 import bcrypt from "bcrypt"
 import  jwt  from "jsonwebtoken";
 import { eq } from "drizzle-orm";
+import dotenv from "dotenv"
+
+
+dotenv.config()
 
 const router = Router();
 
@@ -55,14 +59,15 @@ router.post("/login", async (req, res) => {
     const { email, password} = req.body;
     // TASK 1: Find the user in the database by their email.
     // Hint: Use db.select().from(users).where(eq(users.email, email))
-    const user = db.select().from(users).where(eq(users.email, email))
+    const user = await db.select().from(users).where(eq(users.email, email))
 
     if (!user) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
+    const currentUser = user[0]!
 
     // TASK 2: Check if the password matches using bcrypt
-    const isPasswordCorrect = await bcrypt.compare(password, passwordHash)
+    const isPasswordCorrect = await bcrypt.compare(password, currentUser?.passwordHash)
 
     if (!isPasswordCorrect) {
       return res.status(401).json({ error: "Invalid email or password" });
@@ -73,13 +78,13 @@ router.post("/login", async (req, res) => {
     // The second argument is your "Secret Key" (a massive password only the server knows)
     // The third argument is when the wristband expires
     const token = jwt.sign(
-      { userId: user.id }, 
-      "MY_SUPER_SECRET_KEY_DONT_SHARE", 
+      { userId: currentUser.id }, 
+      process.env.JWT_SECRET || "a_secure_fallback_secret", 
       { expiresIn: "7d" } // Wristband expires in 7 days
     );
 
     // 4. Send the wristband (and safe user data) to the frontend!
-    const { passwordHash, ...safeUser } = user;
+    const { passwordHash, ...safeUser } = currentUser;
     res.status(200).json({
       message: "Login successful",
       token: token,
