@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react"; // 1. Added useEffect
+import { useState, useEffect } from "react"; 
 import { useRouter } from "next/navigation";
 
-// 2. Define the Comment interface
 interface Comment {
   id: string;
   content: string;
@@ -14,12 +13,12 @@ interface Comment {
 export default function CommentSection({ postId }: { postId: string }) {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [comments, setComments] = useState<Comment[]>([]); // 3. State to hold comments
+  const [comments, setComments] = useState<Comment[]>([]); 
   const router = useRouter();
+  
+  // Dynamically grab ID instead of hardcoding for testing!
+  const currentUserId = typeof window !== "undefined" ? localStorage.getItem("userId") : null;
 
-  const testUserId = "ea95eed8-de74-4f2c-90e4-5b58e4f6bd8a"; 
-
-  // 4. Fetch the comments when this component loads!
   useEffect(() => {
     const fetchComments = async () => {
       try {
@@ -32,13 +31,12 @@ export default function CommentSection({ postId }: { postId: string }) {
         console.error("Failed to load comments", error);
       }
     };
-
     fetchComments();
-  }, [postId]); // Re-run if the postId changes
+  }, [postId]); 
 
   const handleComment = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!content) return;
+    if (!content || !currentUserId) return;
 
     setIsSubmitting(true);
 
@@ -46,26 +44,19 @@ export default function CommentSection({ postId }: { postId: string }) {
       const response = await fetch('http://127.0.0.1:3000/api/comments', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content, userId: testUserId, postId })
+        body: JSON.stringify({ content, userId: currentUserId, postId })
       });
 
-      if (!response.ok) {
-        const errorData = await response.json(); 
-        throw new Error(errorData.error || "Failed to post comment");
-      }
+      if (!response.ok) throw new Error("Failed to post comment");
 
       setContent("");
-      
-      // Refresh the page so the Server Component Feed updates
       router.refresh(); 
 
-      // Manually add the new comment to our local Client Component state 
-      // so it shows up instantly without waiting for the server!
       setComments((prev) => [
         {
-          id: Math.random().toString(), // temporary fake ID for instant UI update
+          id: Math.random().toString(), 
           content,
-          userId: testUserId,
+          userId: currentUserId,
           createdAt: new Date().toISOString(),
         },
         ...prev,
@@ -73,39 +64,35 @@ export default function CommentSection({ postId }: { postId: string }) {
 
     } catch (error) {
       console.error("Failed to post comment:", error);
-      alert(error instanceof Error ? error.message : "Something went wrong");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="mt-4 border-t border-gray-100 pt-4">
-      
-      {/* The Display Comments Section */}
+    <div className="mt-4 border-t border-outline-variant pt-4">
       {comments.length > 0 && (
         <div className="mb-4 flex flex-col gap-3">
           {comments.map((comment) => (
-            <div key={comment.id} className="bg-gray-50 p-3 rounded-lg text-sm text-gray-800">
+            <div key={comment.id} className="bg-surface-container p-3 rounded-lg text-body-sm font-body-sm text-on-surface">
               {comment.content}
             </div>
           ))}
         </div>
       )}
 
-      {/* The Comment Input Form */}
       <form onSubmit={handleComment} className="flex gap-2">
         <input
           type="text"
           value={content}
           onChange={(e) => setContent(e.target.value)}
           placeholder="Write a comment..."
-          className="flex-1 bg-gray-50 border border-gray-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 bg-surface border border-outline-variant rounded-full px-4 py-2 text-body-sm font-body-sm focus:outline-none focus:border-primary text-on-surface placeholder:text-secondary"
         />
         <button
           type="submit"
           disabled={isSubmitting || !content}
-          className="bg-gray-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-gray-800 disabled:opacity-50 transition-colors"
+          className="bg-primary text-on-primary px-4 py-2 rounded-full font-code-label text-code-label uppercase tracking-widest hover:opacity-90 disabled:opacity-50 transition-colors"
         >
           {isSubmitting ? "..." : "Reply"}
         </button>

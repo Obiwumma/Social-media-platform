@@ -6,13 +6,10 @@ import { useRouter } from "next/navigation";
 export default function FollowButton({ targetUserId }: { targetUserId: string }) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
-  // 1. Add these two new state variables
   const [isMounted, setIsMounted] = useState(false);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const router = useRouter();
 
-  // 2. Wait for the component to mount in the browser before reading localStorage
   useEffect(() => {
     const loadState = async () => {
       setIsMounted(true);
@@ -21,46 +18,36 @@ export default function FollowButton({ targetUserId }: { targetUserId: string })
     loadState();
   }, []);
 
-  // 3. Prevent rendering anything until the client is fully mounted (fixes hydration!)
   if (!isMounted) return null;
   if (currentUserId === targetUserId) return null;
 
   const handleFollowToggle = async () => {
-    const token = localStorage.getItem("token"); // Grab token once
+    const token = localStorage.getItem("token"); 
     setIsLoading(true);
 
     try {
       if (isFollowing) {
-        // DELETE: Unfollow
         const response = await fetch('http://127.0.0.1:3000/api/follow', {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // Wristband attached
+            "Authorization": `Bearer ${token}`
           },
           body: JSON.stringify({ followingId: targetUserId })
         });
 
-        if (!response.ok) {
-          const errorData = await response.json(); 
-          throw new Error(errorData.error || "Failed to unfollow user");
-        }
-        
+        if (!response.ok) throw new Error("Failed to unfollow user");
       } else {
-        // POST: Follow
         const response = await fetch('http://127.0.0.1:3000/api/follow', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}` // THE BUG WAS HERE: This was missing!
+            "Authorization": `Bearer ${token}` 
           },
           body: JSON.stringify({ followingId: targetUserId })
         });
 
-        if (!response.ok) {
-          const errorData = await response.json(); 
-          throw new Error(errorData.error || "Failed to follow user");
-        }
+        if (!response.ok) throw new Error("Failed to follow user");
       }
 
       setIsFollowing(!isFollowing);
@@ -77,10 +64,10 @@ export default function FollowButton({ targetUserId }: { targetUserId: string })
     <button
       onClick={handleFollowToggle}
       disabled={isLoading}
-      className={`px-4 py-1 text-sm font-medium rounded-full border transition-colors ${
+      className={`px-4 py-1.5 font-code-label text-code-label tracking-wider uppercase rounded-full border transition-all ${
         isFollowing
-          ? "bg-white text-gray-900 border-gray-300 hover:bg-gray-50" 
-          : "bg-gray-900 text-white border-transparent hover:bg-gray-800" 
+          ? "bg-surface text-on-surface border-outline-variant hover:bg-surface-container" 
+          : "bg-primary text-on-primary border-primary hover:opacity-90" 
       }`}
     >
       {isLoading ? "..." : isFollowing ? "Following" : "Follow"}
