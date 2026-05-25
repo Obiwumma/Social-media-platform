@@ -1,11 +1,9 @@
 import RegisterForm from "../components/RegisterForm";
 
-export default function LoginPage() {
+export default function RegisterPage() {
   return (
-    <main className="min-h-screen p-8 bg-gray-50 flex items-center justify-center">
-      <div className="w-full">
-        <RegisterForm />
-      </div>
+    <main className="min-h-screen flex items-center justify-center px-4 py-8 bg-surface">
+      <RegisterForm />
     </main>
   );
 }
