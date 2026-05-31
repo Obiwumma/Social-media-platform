@@ -23,7 +23,7 @@ export default function CommentSection({ postId }: { postId: string }) {
   useEffect(() => {
     const fetchComments = async () => {
       try {
-        const res = await fetch(`http://127.0.0.1:3000/api/comments/${postId}`);
+        const res = await fetch(`https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/comments/${postId}`);
         if (res.ok) {
           const data = await res.json();
           setComments(data);
@@ -42,7 +42,7 @@ export default function CommentSection({ postId }: { postId: string }) {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('http://127.0.0.1:3000/api/comments', {
+      const response = await fetch('https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/comments', {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content, userId: currentUserId, postId })

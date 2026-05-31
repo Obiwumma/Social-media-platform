@@ -19,7 +19,7 @@ export default function LoginForm() {
     setError(""); 
 
     try {
-      const res = await fetch("http://127.0.0.1:3000/api/users/login", {
+      const res = await fetch("https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/users/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

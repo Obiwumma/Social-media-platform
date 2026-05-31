@@ -12,7 +12,7 @@ interface Post{
 
 export default async function Home() {
   // Fetch the posts
-  const postRes = await fetch('http://127.0.0.1:3000/api/posts', { cache: 'no-store' });
+  const postRes = await fetch('https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/posts', { cache: 'no-store' });
   let posts: Post[] = [];
   if (postRes.ok) {
     posts = await postRes.json();

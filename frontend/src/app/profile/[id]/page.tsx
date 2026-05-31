@@ -37,7 +37,7 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         setIsLoading(true);
-        const res = await fetch(`http://127.0.0.1:3000/api/users/${targetUserId}`);
+        const res = await fetch(`https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/users/${targetUserId}`);
         
         if (!res.ok) {
           throw new Error("User not found");

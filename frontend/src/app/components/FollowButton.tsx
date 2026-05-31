@@ -27,7 +27,7 @@ export default function FollowButton({ targetUserId }: { targetUserId: string })
 
     try {
       if (isFollowing) {
-        const response = await fetch('http://127.0.0.1:3000/api/follow', {
+        const response = await fetch('https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/follow', {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export default function FollowButton({ targetUserId }: { targetUserId: string })
 
         if (!response.ok) throw new Error("Failed to unfollow user");
       } else {
-        const response = await fetch('http://127.0.0.1:3000/api/follow', {
+        const response = await fetch('https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/follow', {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

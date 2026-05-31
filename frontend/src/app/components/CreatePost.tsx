@@ -17,7 +17,7 @@ export default function CreatePost() {
     try {
       const token = localStorage.getItem("token");
 
-      const response = await fetch('http://127.0.0.1:3000/api/posts', {
+      const response = await fetch('https://codealpha-tasks-social-media-platform-wkap.onrender.com/api/posts', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
